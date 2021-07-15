@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const fileService = require("../services/select-file-service")
-const { getSettings, writeSettings, isValidDir } = require("../services/settings-service.js");
+const { getSettings, writeSettings, isValidDir, getDefaultDir } = require("../services/settings-service.js");
 const { validationResult } = require("express-validator");
 const { body } = require("express-validator");
 
@@ -14,6 +14,7 @@ router.get("/", (req, res, next) => {
 
 /* GET select file. */
 router.get("/select-file", (req, res, next) => {
+  fileService.setcwd(getDefaultDir()) //6-9
   res.render("select-file", { title: "Select Log File" });
 });
 

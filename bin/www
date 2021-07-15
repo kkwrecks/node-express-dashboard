@@ -9,6 +9,7 @@ const debug = require("debug")("log-dashboard:server");
 const http = require("http");
 const WebSocket = require("ws"); //2-1 require WS library
 const fs = require("fs") //4-5 require fs module
+const getSettings = require("../settings-service.js")
 
 
 /**
@@ -42,6 +43,10 @@ wss.on("connection", (ws) => { //2-3 register listener for connection event
     fs.watch(filePath, ()=>{
       fs.createReadStream(filePath).on("data", chunk => { //4-6 create Readstream to read log file
         let logsArr = chunk.toString().split("\n"); //4-7 convert to str, split into array
+        const settings = getSettings(); //6-11 need pass thru anythg?
+        if (settings.filter) {
+          logs.filter(line, )
+        }
         let logsStr = logsArr.reverse().join("\n"); // 4-8 reverse array convert back to str
         ws.send(logsStr); //4-8 send formatted logs back to client
       })

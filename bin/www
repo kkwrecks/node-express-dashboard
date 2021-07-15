@@ -33,6 +33,10 @@ server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening); 
 
+//listen for connection on newly created server
+//on connection, listen for message
+//on message recieved, watch 
+
 wss.on("connection", (ws) => { //2-3 register listener for connection event
   ws.on("message", (filePath) => {
     fs.watch(filePath, ()=>{

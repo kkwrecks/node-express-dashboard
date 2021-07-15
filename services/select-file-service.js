@@ -5,7 +5,7 @@ const path = require("path"); //5-1 require path module
 const dir = process.cwd();
 
 
-//5-3 store name, whether file is valid directory, path to file. if not calid directory store also the currentDir 
+//5-3 store name, whether file is valid directory, path to file. if not valid directory store also the currentDir 
 function getDirectoryContents(files, currentDir, query) {
     const data = [];
     files.forEach((file) => {
@@ -44,9 +44,11 @@ function readDir(currentDir, res, query) {
     })
 }
 
+//assign it the value of req.query.path, or the empty string ("") if req.query.path is falsy. 
+//5-6 
 exports.get = (req, res) => {
     let currentDir = dir;
-    const query = req.query.path || "";
+    const query = req.query.path || ""; 
     if (query) {
         currentDir = path.join(currentDir, query)
     }

@@ -10,7 +10,7 @@ function getSettings() {
 }
 //6-4
 function writeSettings(newSettings) {
-  const settingsJSON = JSON.stringify(newSettings, null, 2);
+  const settingsJSON = JSON.stringify(newSettings, null, 2); 
 
 }
 

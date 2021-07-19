@@ -9,7 +9,7 @@ const debug = require("debug")("log-dashboard:server");
 const http = require("http");
 const WebSocket = require("ws"); //2-1 require WS library
 const fs = require("fs") //4-5 require fs module
-const getSettings = require("../settings-service.js")
+const getSettings = require("../services/settings-service.js")
 
 
 /**

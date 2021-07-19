@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { settings } = require("../app");
+//const { settings } = require("../app");
 const path = require('path');
 
 const settingsFilePath = path.join(__dirname, '../json/settings.json'); //6-2

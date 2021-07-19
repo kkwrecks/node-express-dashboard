@@ -1,62 +1,57 @@
-
-
 /**
  * Module dependencies.
  */
 
-const app = require("../app");
-const debug = require("debug")("log-dashboard:server");
-const http = require("http");
-const WebSocket = require("ws"); //2-1 require WS library
-const fs = require("fs") //4-5 require fs module
-const getSettings = require("../services/settings-service.js")
-
-
+const app = require('../app');
+const debug = require('debug')('log-dashboard:server');
+const http = require('http');
+const WebSocket = require('ws');
+const fs = require('fs');
+const { getSettings } = require('../services/settings-service');
 /**
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || "3000");
-app.set("port", port);
+const port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
 
 /**
  * Create HTTP server.
  */
+
 const server = http.createServer(app);
 
-const wss = new WebSocket.Server( {server} ); //2-2 create websocket server
-
+const wss = new WebSocket.Server({ server });
 /**
  * Listen on provided port, on all network interfaces.
  */
 
 server.listen(port);
-server.on("error", onError);
-server.on("listening", onListening); 
+server.on('error', onError);
+server.on('listening', onListening);
 
-//listen for connection on newly created server
-//on connection, listen for message
-//on message recieved, watch 
-
-wss.on("connection", (ws) => { //2-3 register listener for connection event
-  ws.on("message", (filePath) => {
-    fs.watch(filePath, ()=>{
-      fs.createReadStream(filePath).on("data", chunk => { //4-6 create Readstream to read log file
-        let logsArr = chunk.toString().split("\n"); //4-7 convert to str, split into array
-        const settings = getSettings(); //6-11 need pass thru anythg?
+wss.on('connection', (ws) => {
+  console.log(ws);
+  ws.on('message', (filePath) => {
+    fs.watch(filePath, () => {
+      fs.createReadStream(filePath).on('data', (chunk) => {
+        let logsArr = chunk.toString().split('\n');
+        const settings = getSettings();
+        // On the line right after, check if settings.filter is truthy,
+        // if so, exclude log entries in logsArr that include the value of settings.filter.
+        // Assign this back to logsArr
         if (settings.filter) {
-          logs.filter(line, )
+          logsArr = logsArr.filter((line) => !line.includes(settings.filter));
         }
-        let logsStr = logsArr.reverse().join("\n"); // 4-8 reverse array convert back to str
-        ws.send(logsStr); //4-8 send formatted logs back to client
-      })
-    })
 
-  // ws.on("message", (message) => { //2-4 register listener for message event
-  //   ws.send("Hello from the Server! You sent: " + message) //2-5 send echo message to client
-  })
-})
+        const logsStr = logsArr.reverse().join('\n');
+        ws.send(logsStr);
+      });
+    });
 
+    ws.send(`Hello from the server! you sent: ${filePath}`);
+  });
+});
 /**
  * Normalize a port into a number, string, or false.
  */
@@ -82,22 +77,20 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== "listen") {
+  if (error.syscall !== 'listen') {
     throw error;
   }
 
-  const bind = typeof port === "string"
-    ? "Pipe " + port
-    : "Port " + port;
+  const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
-    case "EACCES":
-      console.error(bind + " requires elevated privileges");
+    case 'EACCES':
+      console.error(`${bind} requires elevated privileges`);
       process.exit(1);
       break;
-    case "EADDRINUSE":
-      console.error(bind + " is already in use");
+    case 'EADDRINUSE':
+      console.error(`${bind} is already in use`);
       process.exit(1);
       break;
     default:
@@ -111,8 +104,6 @@ function onError(error) {
 
 function onListening() {
   const addr = server.address();
-  const bind = typeof addr === "string"
-    ? "pipe " + addr
-    : "port " + addr.port;
-  debug("Listening on " + bind);
+  const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
+  debug(`Listening on ${bind}`);
 }

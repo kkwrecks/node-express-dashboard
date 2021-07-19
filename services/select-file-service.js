@@ -4,7 +4,7 @@ const path = require("path"); //5-1 require path module
 
 //const dir = process.cwd(); //replaced in 6-7
 let dir; //6-7
-exports.setcwd = (cwd) => {cwd = dir}; //6-7
+exports.setcwd = (cwd) => {dir = cwd}; //6-7
 
 //5-3 store name, whether file is valid directory, path to file. if not valid directory store also the currentDir 
 function getDirectoryContents(files, currentDir, query) {
